@@ -9,7 +9,13 @@ require("dotenv").config();
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: "*", // Allow all origins
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -185,6 +191,8 @@ async function initializeAdmin() {
 // Start server (for local only)
 const PORT = process.env.PORT || 5000;
 if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+} else {
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
 
